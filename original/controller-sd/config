@@ -1,0 +1,356 @@
+# Robot module configurations : general handling of movement G-codes and slicing into moves
+default_feed_rate                            6000             # Default rate ( mm/minute ) for G1/G2/G3 moves
+default_seek_rate                            6000             # Default rate ( mm/minute ) for G0 moves
+mm_per_arc_segment                           0.0              # Arcs are cut into segments ( lines ), this is the length for these segments.  Smaller values mean more resolution, higher values mean faster computation
+mm_max_arc_error                             0.01             # The maximum error for line segments that divide arcs 0 to disable
+
+mm_per_line_segment                          1                # Lines can be cut into segments ( not usefull with cartesian coordinates robots ).
+
+# Arm solution configuration : Cartesian robot. Translates mm positions into stepper positions
+arm_solution                                 corexy           # corexy
+alpha_steps_per_mm                           94.11765               # Steps per mm for alpha stepper
+beta_steps_per_mm                            94.11765              # Steps per mm for beta stepper
+gamma_steps_per_mm                           2785.88235      # Steps per mm for gamma stepper  was 2786
+
+# Planner module configuration : Look-ahead and acceleration configuration
+planner_queue_size                           32               # DO NOT CHANGE THIS UNLESS YOU KNOW EXACTLY WHAT YOUR ARE DOING
+acceleration                                 1000             # Acceleration in mm/second/second. Was 1000
+z_acceleration                               50              # Acceleration for Z only moves in mm/s^2, 0 disables it, disabled by default. DO NOT SET ON A DELTA
+junction_deviation                           0.025             # Similar to the old "max_jerk", in millimeters, see : https://github.com/grbl/grbl/blob/master/planner.c#L409
+                                                              # and https://github.com/grbl/grbl/wiki/Configuring-Grbl-v0.8 . Lower values mean being more careful, higher values means being faster and have more jerk
+
+on_boot_gcode_enabled                        true
+on_boot_gcode                                /sd/on_boot
+
+# Stepper module configuration
+microseconds_per_step_pulse                  1                # Duration of step pulses to stepper drivers, in microseconds
+base_stepping_frequency                      120000           # Base frequency for stepping
+watchdog_timeout                             0               # watchdog timeout in seconds, default is 10, set to 0 to disable the watchdog
+#debugging
+#base_stepping_frequency                      50000           # Base frequency for stepping
+#watchdog_timeout                             0               # watchdog timeout in seconds, default is 10, set to 0 to disable the watchdog
+
+# Stepper module pins ( ports, and pin numbers, appending "!" to the number will invert a pin )
+alpha_step_pin                               2.2              # Pin for alpha stepper step signal
+alpha_dir_pin                                0.20!             # Pin for alpha stepper direction LC 0.20!
+alpha_en_pin                                 0.19            # Pin for alpha enable pin
+alpha_current                                2.5              # X stepper motor current
+x_axis_max_speed                             19000            # mm/min
+alpha_max_rate                               19000.0          # mm/min actuator max speed
+
+beta_step_pin                                2.1              # Pin for beta stepper step signal
+beta_dir_pin                                 0.11!             # Pin for beta stepper direction. LC 0.11!
+beta_en_pin                                  0.10            # Pin for beta enable
+beta_current                                 2.5              # Y stepper motor current
+y_axis_max_speed                             19000            # mm/min
+beta_max_rate                                19000.0          # mm/min actuator max speed
+
+gamma_step_pin                               2.3              # Pin for gamma stepper step signal
+gamma_dir_pin                                0.22!             # Pin for gamma stepper direction
+gamma_en_pin                                 0.21            # Pin for gamma enable
+gamma_current                                1.5              # Z stepper motor current
+z_axis_max_speed                             200              # mm/min
+gamma_max_rate                               200.0            # mm/min actuator max speed
+
+# bigfoot settings
+motor_driver_control.alpha.enable           true              # alpha (X) is a TMC26X
+motor_driver_control.alpha.designator       X                 # A to set the settings
+motor_driver_control.alpha.chip             TMC2660           # chip name
+motor_driver_control.alpha.current          2500              # current in milliamps
+motor_driver_control.alpha.max_current      3000              # max current in milliamps
+motor_driver_control.alpha.microsteps       16                # microsteps 256 max
+motor_driver_control.alpha.alarm            true              # set to true means the error bits are checked
+motor_driver_control.alpha.halt_on_alarm    false              # if set to true means ON_HALT is entered on any error bits being set
+motor_driver_control.alpha.spi_channel       0                # SPI channel 1 is sdcard channel
+motor_driver_control.alpha.spi_cs_pin        0.10             # SPI CS pin
+motor_driver_control.alpha.spi_frequency     4000000          # SPI frequency
+#motor_driver_control.alpha.sense_resistor     100             # set the sense resistor used.
+
+motor_driver_control.beta.enable           true              # beta (Y) is a TMC26X
+motor_driver_control.beta.designator       Y                 # B to set the settings
+motor_driver_control.beta.chip             TMC2660           # chip name
+motor_driver_control.beta.current          2500              # current in milliamps
+motor_driver_control.beta.max_current      3000              # max current in milliamps
+motor_driver_control.beta.microsteps       16                # microsteps 256 max
+motor_driver_control.beta.alarm            true              # set to true means the error bits are checked
+motor_driver_control.beta.halt_on_alarm    false             # if set to true means ON_HALT is entered on any error bits being set
+motor_driver_control.beta.spi_channel       0                # SPI channel 1 is sdcard channel
+motor_driver_control.beta.spi_cs_pin        0.19             # SPI CS pin DRV8711 requires inverted CS
+motor_driver_control.beta.spi_frequency     4000000          # SPI frequency
+#motor_driver_control.beta.sense_resistor     100             # set the sense resistor used
+
+motor_driver_control.gamma.enable           true              # gamma (Z) is a TMC26X
+motor_driver_control.gamma.designator       Z                 # G to set the settings
+motor_driver_control.gamma.chip             TMC2660           # chip name
+motor_driver_control.gamma.current          1500              # current in milliamps
+motor_driver_control.gamma.max_current      3000              # max current in milliamps
+motor_driver_control.gamma.microsteps       8                # microsteps 256 max
+motor_driver_control.gamma.alarm            true              # set to true means the error bits are checked
+motor_driver_control.gamma.halt_on_alarm    false             # if set to true means ON_HALT is entered on any error bits being set
+motor_driver_control.gamma.spi_channel       0                # SPI channel 1 is sdcard channel
+motor_driver_control.gamma.spi_cs_pin        0.21             # SPI CS pin DRV8711 requires inverted CS
+motor_driver_control.gamma.spi_frequency     4000000          # SPI frequency
+#motor_driver_control.gamma.sense_resistor     100             # set the sense resistor used
+
+# Serial communications configuration ( baud rate default to 9600 if undefined )
+uart0.baud_rate                              115200           # Baud rate for the default hardware serial port
+second_usb_serial_enable                     false            # This enables a second usb serial port (to have both pronterface and a terminal connected)
+
+#msd_disable                                 false            # disable the MSD (USB SDCARD) when set to true
+less_disable                                true             # disable using leds after config loaded
+#dfu_enable                                  false            # for linux developers, set to true to enable DFU
+
+## Extruder module configuration
+extruder.hotend.enable                          true             # Whether to activate the extruder module at all. All configuration is ignored if false
+extruder.hotend.steps_per_mm                    934              # Steps per mm for extruder stepper
+extruder.hotend.default_feed_rate               600              # Default rate ( mm/minute ) for moves where only the extruder moves
+extruder.hotend.acceleration                    500              # Acceleration for the stepper motor mm/sec²
+extruder.hotend.max_speed                       50               # mm/s
+
+extruder.hotend.step_pin                        2.8              # Pin for extruder step signal
+extruder.hotend.dir_pin                         2.13              # Pin for extruder dir signal
+extruder.hotend.en_pin                          nc              # Pin for extruder enable signal  - was 0.4
+
+delta_current                                0.8              # Extruder stepper motor current  0.8
+
+motor_driver_control.delta.enable             true            # delta (E1) is a TMC26X
+motor_driver_control.delta.designator         A               # D to set the settings
+motor_driver_control.delta.chip               TMC2660         # chip name
+motor_driver_control.delta.current            800            # current in milliamps   800
+motor_driver_control.delta.max_current        800            # max current in milliamps 800
+motor_driver_control.delta.microsteps         32              # microsteps 256 max
+motor_driver_control.delta.alarm              true            # set to true means the error bits are checked
+motor_driver_control.delta.halt_on_alarm      false           # if set to true means ON_HALT is entered on any error bits being set
+motor_driver_control.delta.spi_channel        0               # SPI channel 1 is sdcard channel
+motor_driver_control.delta.spi_cs_pin         4.29             # SPI CS pin
+#motor_driver_control.delta.spi_frequency     100000          # SPI frequency
+motor_driver_control.delta.sense_resistor     100             # set the sense resistor used.
+
+
+# Second extruder module configuration
+extruder.hotend2.enable                       true           # Whether to activate the extruder module at all. All configuration is ignored if false
+extruder.hotend2.steps_per_mm                 934            # Steps per mm for extruder stepper
+extruder.hotend2.default_feed_rate            600             # Default rate ( mm/minute ) for moves where only the extruder moves
+extruder.hotend2.acceleration                 500             # Acceleration for the stepper motor, as of 0.6, arbitrary ratio
+extruder.hotend2.max_speed                    50              # mm/s
+
+extruder.hotend2.step_pin                     2.0             # Pin for extruder step signal
+extruder.hotend2.dir_pin                      0.5!            # Pin for extruder dir signal
+extruder.hotend2.en_pin                       nc              # Pin for extruder enable signal
+
+extruder.hotend2.x_offset                     -47.58               # x offset from origin in mm
+extruder.hotend2.y_offset                     0            # y offset from origin in mm
+extruder.hotend2.z_offset                     0               # z offset from origin in mm
+
+epsilon_current                               0.8             # Second extruder stepper motor current
+
+motor_driver_control.epsilon.enable           true            # epsilon (E2) is a TMC26X
+motor_driver_control.epsilon.designator       B               # E to set the settings
+motor_driver_control.epsilon.chip             TMC2660         # chip name
+motor_driver_control.epsilon.current          800            # current in milliamps
+motor_driver_control.epsilon.max_current      800            # max current in milliamps
+motor_driver_control.epsilon.microsteps       32             # microsteps 256 max
+motor_driver_control.epsilon.alarm            true            # set to true means the error bits are checked
+motor_driver_control.epsilon.halt_on_alarm    false           # if set to true means ON_HALT is entered on any error bits being set
+motor_driver_control.epsilon.spi_channel      0               # SPI channel 1 is sdcard channel
+motor_driver_control.epsilon.spi_cs_pin       0.4            # SPI CS pin DRV8711 requires inverted CS
+#motor_driver_control.epsilon.spi_frequency   100000          # SPI frequency
+motor_driver_control.epsilon.sense_resistor   100             # set the sense resistor used
+
+# Hotend temperature control configuration
+temperature_control.hotend.enable            true             # Whether to activate this ( "hotend" ) module at all. All configuration is ignored if false.
+temperature_control.hotend.thermistor_pin    0.24             # Pin for the thermistor to read
+temperature_control.hotend.heater_pin        2.4              # 2.5 Pin that controls the heater
+#temperature_control.hotend.thermistor        Semitec        # see http://smoothieware.org/temperaturecontrol#toc5
+temperature_control.hotend.beta             4066             # or set the beta value
+
+temperature_control.hotend.set_m_code        104              #
+temperature_control.hotend.set_and_wait_m_code 109            #
+temperature_control.hotend.designator        T0                #
+temperature_control.hotend.max_temp         500              # Set maximum temperature - Will prevent heating above 300 by default
+
+temperature_control.hotend.p_factor          50.0             #
+temperature_control.hotend.i_factor          3.985           #
+temperature_control.hotend.d_factor          157               #
+
+# Safety control is enabled by default and can be overidden here, the values show the defaults
+# See http://smoothieware.org/temperaturecontrol#runaway
+temperature_control.hotend.runaway_heating_timeout      0  # How long it can take to heat up, max is 2040 seconds.
+temperature_control.hotend.runaway_cooling_timeout      0  # How long it can take to cool down if temp is set lower, max is 2040 seconds
+temperature_control.hotend.runaway_range                50   # How far from the set temperature it can wander, max setting is 63°C
+
+temperature_control.hotend.tolerance_pct       1.0  # tolerance band for set-and-wait code
+
+# Hotend temperature control configuration
+temperature_control.hotend2.enable            true             # Whether to activate this ( "hotend" ) module at all. All configuration is ignored if false.
+temperature_control.hotend2.thermistor_pin    0.25             # Pin for the thermistor to read
+temperature_control.hotend2.heater_pin        2.5              # 2.5 Pin that controls the heater
+#temperature_control.hotend2.thermistor        Semitec        # see http://smoothieware.org/temperaturecontrol#toc5
+temperature_control.hotend2.beta             4066             # or set the beta value
+
+temperature_control.hotend2.set_m_code        104              #
+temperature_control.hotend2.set_and_wait_m_code 109            #
+temperature_control.hotend2.designator        T1                #
+temperature_control.hotend2.max_temp         500              # Set maximum temperature - Will prevent heating above 300 by default
+
+temperature_control.hotend2.p_factor          50.0             #
+temperature_control.hotend2.i_factor          3.985           #
+temperature_control.hotend2.d_factor          157               #
+
+# Safety control is enabled by default and can be overidden here, the values show the defaults
+temperature_control.hotend2.runaway_heating_timeout      0  # How long it can take to heat up, max is 2040 seconds.
+temperature_control.hotend2.runaway_cooling_timeout      0  # How long it can take to cool down if temp is set lower, max is 2040 seconds
+temperature_control.hotend2.runaway_range                50   # How far from the set temperature it can wander, max setting is 63°C
+
+temperature_control.hotend2.tolerance_pct     1.0  # tolerance band for set-and-wait code
+
+
+temperature_control.bed.enable               true            #
+temperature_control.bed.thermistor_pin       0.23             #
+temperature_control.bed.heater_pin           2.7              #
+temperature_control.bed.thermistor           Honeywell100K    # see http://smoothieware.org/temperaturecontrol#toc5
+#temperature_control.bed.beta                3974             # or set the beta value
+
+temperature_control.bed.p_factor             238.7           # permanently set the PID values after an auto pid
+temperature_control.bed.i_factor             3.936            # was 12.936
+temperature_control.bed.d_factor             1101               #
+#temperature_control.bed.max_pwm		     64 
+
+temperature_control.bed.set_m_code           140              #
+temperature_control.bed.set_and_wait_m_code  190              #
+temperature_control.bed.designator           B                #
+
+# Safety control is enabled by default and can be overidden here, the values show the defaults
+temperature_control.bed.runaway_heating_timeout      0  # How long it can take to heat up, max is 2040 seconds.
+temperature_control.bed.runaway_cooling_timeout      0  # How long it can take to cool down if temp is set lower, max is 2040 seconds
+temperature_control.bed.runaway_range                50   # How far from the set temperature it can wander, max setting is 63°C
+
+temperature_control.bed.tolerance_pct         1.0  # tolerance band for set-and-wait code
+
+# Switch module for fan control
+switch.fan.enable                            true             #
+switch.fan.input_on_command                  M106             #
+switch.fan.input_off_command                 M107             #
+switch.fan.output_pin                        1.22              #  1.22
+switch.fan.output_type                      pwm          # just an on or off pin
+
+switch.misc.enable                           true            #
+switch.misc.input_on_command                 M42              #
+switch.misc.input_off_command                M43              #
+switch.misc.output_pin                       0.26              #  0.26
+switch.misc.output_type                     digital          # just an on or off pin
+switch.misc.startup_state		     true
+
+# Switch module for servo control
+switch.servo.enable                            true             # Enable this module
+switch.servo.input_on_command                  M280             # M280 S7.5 would be midway
+switch.servo.input_off_command                 M281             # Same as M280 S0 0% duty cycle, effectively off
+switch.servo.output_pin                        3.25             # Must be a PWM capable pin
+switch.servo.output_type                       hwpwm            # H/W pwm output settable with S parameter in the input_on_comand
+#switch.servo.pwm_period_ms                    20               # set period to 20ms (50Hz) default is 50Hz
+
+# Switch module for a second servo control
+switch.servo2.enable                            true             # Enable this module
+switch.servo2.input_on_command                  M280             # M280.1 S7.5 would be midway
+switch.servo2.input_off_command                 M281             # Same as M280.1 S0 0% duty cycle, effectively off
+switch.servo2.subcode                           1                # M280.1 will trigger this switch
+switch.servo2.output_pin                        1.23             # Must be a PWM capable pin  - was 3.26
+switch.servo2.output_type                       hwpwm            # H/W pwm output settable with S parameter in the input_on_comand
+
+temperatureswitch.hotend.enable                false             #
+
+# Endstops
+endstops_enable                              true             # the endstop module is enabled by default and can be disabled here
+corexy_homing                                true            # set to true if homing on a hbot or corexy
+alpha_min_endstop                            1.25             # 1.24v add a ! to invert if endstop is NO connected to ground
+alpha_max_endstop                            nc           	#
+alpha_homing_direction                       home_to_min      # or set to home_to_max and set alpha_max
+alpha_min                                    -38                # this gets loaded after homing when home_to_min is set -45
+alpha_max                                    600              # this gets loaded after homing when home_to_max is set 380
+beta_min_endstop                             nc               #
+beta_max_endstop                             1.24             #  1.25v
+beta_homing_direction                        home_to_max      #
+beta_min                                     0                #
+beta_max                                     600              #  470
+#gamma_min_endstop                            0.17             # 1.26V
+gamma_min_endstop                            1.26             # 1.26V
+gamma_max_endstop                            nc               #
+gamma_homing_direction                       home_to_min      #
+gamma_min                                    0                #
+gamma_max                                    900              #
+
+alpha_max_travel                             700              # max travel in mm for alpha/X axis when homing
+beta_max_travel                              700              # max travel in mm for beta/Y axis when homing
+gamma_max_travel                             1000              # max travel in mm for gamma/Z axis when homing
+
+
+alpha_fast_homing_rate_mm_s                  50               # feedrates in mm/second
+beta_fast_homing_rate_mm_s                   50               # "
+gamma_fast_homing_rate_mm_s                  5                # "
+alpha_slow_homing_rate_mm_s                  25               # "
+beta_slow_homing_rate_mm_s                   25               # "
+gamma_slow_homing_rate_mm_s                  3                # "
+
+alpha_homing_retract_mm                      5                # distance in mm
+beta_homing_retract_mm                       5                # "
+gamma_homing_retract_mm                      1                # "
+
+#endstop_debounce_count                       100              # uncomment if you get noise on your endstops, default is 100
+
+
+# optional Z probe
+zprobe.enable                                true           # set to true to enable a zprobe
+zprobe.probe_pin                             1.19          # pin probe is attached to if NC remove the !  1.18
+zprobe.probe2_pin                            1.20          # pin probe is attached to if NC remove the !
+zprobe.slow_feedrate                         0.5               # mm/sec probe feed rate. was 0.1
+zprobe.debounce_ms	                     3             # set if noisy
+zprobe.fast_feedrate                         100             # move feedrate mm/sec was 100
+zprobe.probe_height                          3.0               # how much above bed to start probe - default 5
+zprobe.home_offset			     -0.15	     # z value after probe operation completes
+zprobe.home_offset2			     -0.15	     # z value after probe operation completes
+zprobe.disable_check			     true			# disables the check for the sensor value when lifting
+zprobe.sensor_on_pin			     1.18		# 3.25
+zprobe.calibrate_pin			     1.21		# 3.26
+zprobe.max_z				     20.0
+
+zprobe.probe_up				     7.4
+zprobe.probe_down			     5.4
+zprobe.probe2_up			     7.2
+zprobe.probe2_down			     9.6
+
+zprobe.x_pos				     290
+zprobe.y_pos				     310
+zprobe.x_pos_1				     291
+zprobe.y_pos_1				     311
+
+zprobe.mount_turns_mm    		     0.91
+zprobe.mount_pos1_x	     		     125.0
+zprobe.mount_pos1_y	     		     410.0
+zprobe.mount_pos2_x	     		     485.0
+zprobe.mount_pos2_y	     		     410.0
+zprobe.mount_pos3_x	     		     295.0
+zprobe.mount_pos3_y	     		     115.0
+
+
+leveling-strategy.rectangular-grid.enable               true     # The strategy must be enabled in the config, as well as the zprobe module.
+leveling-strategy.rectangular-grid.x_size               600       # size of bed in the X axis 290
+leveling-strategy.rectangular-grid.y_size               600       # size of bed in the Y axis 290
+leveling-strategy.rectangular-grid.size                 8 	 # The size of the grid, for example, 7 causes a 7x7 grid with 49 points.
+                                                                 # Must be an odd number.
+leveling-strategy.rectangular-grid.do_home              false
+leveling-strategy.rectangular-grid.probe_offsets        0,0,0    # Optional probe offsets from the nozzle or tool head
+leveling-strategy.rectangular-grid.save                 true    # If the saved grid is to be loaded on boot then this must be set to true
+leveling-strategy.rectangular-grid.initial_height       3       # will move to Z10 before the first probe
+leveling-strategy.rectangular-grid.dampening_start      2.5      # compensation decrease point (optional)
+leveling-strategy.rectangular-grid.height_limit         25        # no compensation to apply after this point (optional)
+leveling-strategy.rectangular-grid.human_readable       false
+leveling-strategy.rectangular-grid.sample_count         2
+
+
+# Azteeg specific settings do not change
+currentcontrol_module_enable                 false           #
+digipot_max_current                          2.4             # max current
+digipot_factor                               103.0           # factor for converting current to digipot value
+#51.0 for SD8825, SD6128, BSD4989
+
+leds_disable                                true             # disable using leds after config loaded

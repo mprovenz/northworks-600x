@@ -1,0 +1,5 @@
+loggers:
+  octoprint.printer:
+    level: DEBUG
+  octoprint.util:
+    level: DEBUG

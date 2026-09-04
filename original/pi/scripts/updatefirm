@@ -1,0 +1,35 @@
+#!/bin/bash
+
+
+FILE=/home/pi/.octoprint/uploads/firmware.bin
+FILE2=/home/pi/.octoprint/uploads/OctoPrint-GridNorm-master.zip
+DESTPATH=$(mountctl)
+
+if test -f "$FILE"; then
+	if [ ! -z "$DESTPATH" ]; then
+		sudo cp /home/pi/.octoprint/uploads/firmware.bin $DESTPATH &>> /tmp/err.out
+		rm "$FILE"
+	else
+		echo 0
+		exit 1
+	fi
+fi
+
+if test -f "$FILE2"; then
+	cp /home/pi/.octoprint/uploads/OctoPrint-GridNorm-master.zip /home/pi &>> /tmp/err.out
+	cd /home/pi
+	rm -rf /home/pi/OctoPrint-GridNorm-master_old
+	mv /home/pi/OctoPrint-GridNorm-master /home/pi/OctoPrint-GridNorm-master_old
+	unzip /home/pi/OctoPrint-GridNorm-master.zip &>> /tmp/err.out
+	cd /home/pi/OctoPrint-GridNorm-master
+	make all &>> /tmp/err.out
+	make install &>> /tmp/err.out
+	rm "$FILE2"
+fi
+
+if [ ! -z "$DESTPATH" ]; then
+	umountctl
+fi
+
+echo 1
+exit 0

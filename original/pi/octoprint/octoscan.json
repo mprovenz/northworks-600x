@@ -1,0 +1,751 @@
+{
+  "octoscanner_version": "0.1.0",
+  "rule_files": [
+    {
+      "path": "deprecation/python_deprecation.yaml",
+      "octoscanner_version": "0.1.0",
+      "generated_at": "2026-06-17T17:09:32+00:00",
+      "octoprint_versions": [
+        "1.4.0",
+        "1.5.0",
+        "1.6.0",
+        "1.7.0",
+        "1.8.0",
+        "1.9.0",
+        "1.10.0",
+        "1.11.0",
+        "1.11.7",
+        "2.0.0 (next branch)",
+        "2.1.0 (dev branch)"
+      ]
+    },
+    {
+      "path": "deprecation/python_settings_deprecation.yaml",
+      "octoscanner_version": "0.1.0",
+      "generated_at": "2026-04-30T15:52:51+00:00",
+      "octoprint_versions": [
+        "1.4.0",
+        "1.5.0",
+        "1.6.0",
+        "1.7.0",
+        "1.8.0",
+        "1.9.0",
+        "1.10.0",
+        "1.11.0",
+        "1.11.7",
+        "2.0.0 (next branch)",
+        "2.1.0 (dev branch)"
+      ]
+    },
+    {
+      "path": "packaging/packaging.yaml"
+    },
+    {
+      "path": "removal/python_removal.yaml",
+      "octoscanner_version": "0.1.0",
+      "generated_at": "2026-06-17T17:09:32+00:00",
+      "octoprint_versions": [
+        "1.4.0",
+        "1.5.0",
+        "1.6.0",
+        "1.7.0",
+        "1.8.0",
+        "1.9.0",
+        "1.10.0",
+        "1.11.0",
+        "1.11.7",
+        "2.0.0 (next branch)",
+        "2.1.0 (dev branch)"
+      ]
+    },
+    {
+      "path": "removal/python_settings_removal.yaml",
+      "octoscanner_version": "0.1.0",
+      "generated_at": "2026-06-17T17:09:32+00:00",
+      "octoprint_versions": [
+        "1.4.0",
+        "1.5.0",
+        "1.6.0",
+        "1.7.0",
+        "1.8.0",
+        "1.9.0",
+        "1.10.0",
+        "1.11.0",
+        "1.11.7",
+        "2.0.0 (next branch)",
+        "2.1.0 (dev branch)"
+      ]
+    },
+    {
+      "path": "removal/python_signature_change.yaml",
+      "octoscanner_version": "0.1.0",
+      "generated_at": "2026-06-17T17:09:32+00:00",
+      "octoprint_versions": [
+        "1.4.0",
+        "1.5.0",
+        "1.6.0",
+        "1.7.0",
+        "1.8.0",
+        "1.9.0",
+        "1.10.0",
+        "1.11.0",
+        "1.11.7",
+        "2.0.0 (next branch)",
+        "2.1.0 (dev branch)"
+      ]
+    },
+    {
+      "path": "security/security.yaml"
+    }
+  ],
+  "plugins": [
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/nwtools",
+      "summary": {
+        "removal": 1,
+        "security": 4,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [
+        {
+          "rule": {
+            "id": "REM-0441",
+            "type": "removal",
+            "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.server.admin_permission`.",
+            "since": "2.0.0"
+          },
+          "file_path": "octoprint_NWTools/__init__.py",
+          "line_number": 20,
+          "end_line_number": 20,
+          "code_snippet": "      19 | \n  >   20 | from octoprint.server import admin_permission\n      21 | "
+        }
+      ],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0001",
+            "type": "security",
+            "message": "Plugin implements `SimpleApiPlugin` but does not override `is_api_protected()`. Until OctoPrint 2.1.0, the default implementation returns `False`, allowing unauthenticated access to `SimpleApi` endpoints.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_api_protected()` to explicitly return `True`. Note that this only controls authentication; you should also verify permissions explicitly in each API handler (e.g. `Permissions.PLUGIN_MYPLUGIN_ACCESS`).\n",
+            "since": "1.11.2"
+          },
+          "file_path": "octoprint_NWTools/__init__.py",
+          "line_number": 46,
+          "end_line_number": 312,
+          "code_snippet": "      45 | \n  >   46 | class NwtoolsPlugin(octoprint.plugin.SettingsPlugin,\n      47 | \t\t\t\t\toctoprint.plugin.StartupPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "octoprint_NWTools/__init__.py",
+          "line_number": 46,
+          "end_line_number": 312,
+          "code_snippet": "      45 | \n  >   46 | class NwtoolsPlugin(octoprint.plugin.SettingsPlugin,\n      47 | \t\t\t\t\toctoprint.plugin.StartupPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0009",
+            "type": "security",
+            "message": "Knockout `html:` binding bound to a non-literal value in a Jinja/HTML template. The bound expression is rendered as raw HTML, so any attacker-controllable data flowing into it results in DOM XSS.\n",
+            "severity": "WARNING",
+            "suggestion": "Prefer the Knockout `text:` binding, which renders the value as plain text and is safe by default. Use `html:` only when raw HTML output is strictly required, and only with values that are either fully static or that have been properly sanitized.\n",
+            "since": null
+          },
+          "file_path": "octoprint_NWTools/templates/NWCalibrate_tab.jinja2",
+          "line_number": 123,
+          "end_line_number": 123,
+          "code_snippet": "     122 | \t<th class=\"calibrate_tool\" data-bind=\"text: name, attr: {title: name}\"></th>\n  >  123 | \t<td class=\"calibrate_current\" data-bind=\"html: $root.formatFloat(actual()), attr: {title: $root.formatFloat(actual())}\"></td>\n     124 | \t<td class=\"calibrate_target\">"
+        },
+        {
+          "rule": {
+            "id": "SEC-0009",
+            "type": "security",
+            "message": "Knockout `html:` binding bound to a non-literal value in a Jinja/HTML template. The bound expression is rendered as raw HTML, so any attacker-controllable data flowing into it results in DOM XSS.\n",
+            "severity": "WARNING",
+            "suggestion": "Prefer the Knockout `text:` binding, which renders the value as plain text and is safe by default. Use `html:` only when raw HTML output is strictly required, and only with values that are either fully static or that have been properly sanitized.\n",
+            "since": null
+          },
+          "file_path": "octoprint_NWTools/templates/NWCalibrate_tab.jinja2",
+          "line_number": 143,
+          "end_line_number": 143,
+          "code_snippet": "     142 | \t<th class=\"calibrate_tool\" data-bind=\"text: name, attr: {title: name}\"></th>\n  >  143 | \t<td class=\"calibrate_current\" data-bind=\"html: $root.formatFloat(actual()), attr: {title: $root.formatFloat(actual())}\"></td>\n     144 | \t<td class=\"calibrate_target\">"
+        }
+      ],
+      "deprecation": [],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_filamentrevolutionsXL",
+      "summary": {
+        "removal": 0,
+        "security": 2,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0004",
+            "type": "security",
+            "message": "Plugin implements `BlueprintPlugin` but does not override `is_blueprint_csrf_protected()`. Until OctoPrint 2.0.0, the default implementation returns `False`, leaving the blueprint's endpoints exposed to CSRF attacks.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_blueprint_csrf_protected()` to return `True` and exempt only the endpoints that must not use CSRF protection via the `@octoprint.plugin.BlueprintPlugin.csrf_exempt()` decorator.\n",
+            "since": "1.8.3"
+          },
+          "file_path": "__init__.py",
+          "line_number": 11,
+          "end_line_number": 315,
+          "code_snippet": "      10 | \n  >   11 | class FilamentSensorsRevolutionsXL(octoprint.plugin.StartupPlugin,\n      12 |                                  octoprint.plugin.EventHandlerPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 11,
+          "end_line_number": 315,
+          "code_snippet": "      10 | \n  >   11 | class FilamentSensorsRevolutionsXL(octoprint.plugin.StartupPlugin,\n      12 |                                  octoprint.plugin.EventHandlerPlugin,"
+        }
+      ],
+      "deprecation": [],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_netconnectd",
+      "summary": {
+        "removal": 2,
+        "security": 2,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [
+        {
+          "rule": {
+            "id": "REM-0441",
+            "type": "removal",
+            "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.server.admin_permission`.",
+            "since": "2.0.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 16,
+          "end_line_number": 16,
+          "code_snippet": "      15 | \n  >   16 | from octoprint.server import admin_permission\n      17 | "
+        },
+        {
+          "rule": {
+            "id": "REM-0441",
+            "type": "removal",
+            "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.server.admin_permission`.",
+            "since": "2.0.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 131,
+          "end_line_number": 131,
+          "code_snippet": "     130 | \t\t# any commands processed after this check require admin permissions\n  >  131 | \t\tif not admin_permission.can():\n     132 | \t\t\treturn make_response(\"Insufficient rights\", 403)"
+        }
+      ],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0001",
+            "type": "security",
+            "message": "Plugin implements `SimpleApiPlugin` but does not override `is_api_protected()`. Until OctoPrint 2.1.0, the default implementation returns `False`, allowing unauthenticated access to `SimpleApi` endpoints.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_api_protected()` to explicitly return `True`. Note that this only controls authentication; you should also verify permissions explicitly in each API handler (e.g. `Permissions.PLUGIN_MYPLUGIN_ACCESS`).\n",
+            "since": "1.11.2"
+          },
+          "file_path": "__init__.py",
+          "line_number": 18,
+          "end_line_number": 303,
+          "code_snippet": "      17 | \n  >   18 | class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,\n      19 |                                 octoprint.plugin.TemplatePlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 18,
+          "end_line_number": 303,
+          "code_snippet": "      17 | \n  >   18 | class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,\n      19 |                                 octoprint.plugin.TemplatePlugin,"
+        }
+      ],
+      "deprecation": [],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_touchui",
+      "summary": {
+        "removal": 4,
+        "security": 5,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [
+        {
+          "rule": {
+            "id": "REM-0441",
+            "type": "removal",
+            "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.server.admin_permission`.",
+            "since": "2.0.0"
+          },
+          "file_path": "customization.py",
+          "line_number": 7,
+          "end_line_number": 7,
+          "code_snippet": "       6 | except:\n  >    7 | \tfrom octoprint.server import admin_permission\n       8 | "
+        },
+        {
+          "rule": {
+            "id": "REM-0441",
+            "type": "removal",
+            "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.server.admin_permission`.",
+            "since": "2.0.0"
+          },
+          "file_path": "customization.py",
+          "line_number": 76,
+          "end_line_number": 76,
+          "code_snippet": "      75 | \t\texcept:\n  >   76 | \t\t\tplugin_permission = admin_permission.can()\n      77 | "
+        },
+        {
+          "rule": {
+            "id": "REM-0441",
+            "type": "removal",
+            "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.server.admin_permission`.",
+            "since": "2.0.0"
+          },
+          "file_path": "decorators.py",
+          "line_number": 11,
+          "end_line_number": 11,
+          "code_snippet": "      10 | except:\n  >   11 | \tfrom octoprint.server import admin_permission\n      12 | "
+        },
+        {
+          "rule": {
+            "id": "REM-0441",
+            "type": "removal",
+            "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.server.admin_permission`.",
+            "since": "2.0.0"
+          },
+          "file_path": "decorators.py",
+          "line_number": 19,
+          "end_line_number": 19,
+          "code_snippet": "      18 | \t\texcept:\n  >   19 | \t\t\tplugin_permission = admin_permission.can()\n      20 | "
+        }
+      ],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0003",
+            "type": "security",
+            "message": "Plugin implements `is_blueprint_protected()` but explicitly returns `False`, leaving the blueprint's dynamic endpoints accessible without authentication.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Ensure this is intentional. Consider returning `True` and adding explicit permission checks in each endpoint handler (e.g. `Permissions.PLUGIN_MYPLUGIN_ACCESS`).\n",
+            "since": "1.2.0"
+          },
+          "file_path": "api.py",
+          "line_number": 14,
+          "end_line_number": 59,
+          "code_snippet": "      13 | \n  >   14 | class touchui_api(octoprint.plugin.BlueprintPlugin):\n      15 | \tdef increase_upload_bodysize(self, current_max_body_sizes, *args, **kwargs):"
+        },
+        {
+          "rule": {
+            "id": "SEC-0004",
+            "type": "security",
+            "message": "Plugin implements `BlueprintPlugin` but does not override `is_blueprint_csrf_protected()`. Until OctoPrint 2.0.0, the default implementation returns `False`, leaving the blueprint's endpoints exposed to CSRF attacks.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_blueprint_csrf_protected()` to return `True` and exempt only the endpoints that must not use CSRF protection via the `@octoprint.plugin.BlueprintPlugin.csrf_exempt()` decorator.\n",
+            "since": "1.8.3"
+          },
+          "file_path": "api.py",
+          "line_number": 14,
+          "end_line_number": 59,
+          "code_snippet": "      13 | \n  >   14 | class touchui_api(octoprint.plugin.BlueprintPlugin):\n      15 | \tdef increase_upload_bodysize(self, current_max_body_sizes, *args, **kwargs):"
+        },
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 14,
+          "end_line_number": 102,
+          "code_snippet": "      13 | \n  >   14 | class touchui_core(\ttouchui_api,\n      15 | \t\t\t\t\ttouchui_customization,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0011",
+            "type": "security",
+            "message": "`PNotify` invocation passing a non-literal value as `text` without `text_escape: true`. PNotify v2 (the version shipped with OctoPrint) renders `text` as raw HTML by default, so any attacker-controllable data flowing into it (push messages, backend errors, printer responses, etc.) results in DOM XSS.\n",
+            "severity": "WARNING",
+            "suggestion": "Set `text_escape: true` in the PNotify options so the value is rendered as plain text. If the value must contain HTML, escape any user-controllable substring via `_.escape(...)` before interpolating it into the markup.\n",
+            "since": null
+          },
+          "file_path": "static/js/touchui.bundled.js",
+          "line_number": 932,
+          "end_line_number": 938,
+          "code_snippet": "     931 | \t\tif(content && content.trim() && error.status !== 401) {\n  >  932 | \t\t\tnew PNotify({\n     933 | \t\t\t\ttitle: 'TouchUI: Whoops, something went wrong...',"
+        },
+        {
+          "rule": {
+            "id": "SEC-0011",
+            "type": "security",
+            "message": "`PNotify` invocation passing a non-literal value as `text` without `text_escape: true`. PNotify v2 (the version shipped with OctoPrint) renders `text` as raw HTML by default, so any attacker-controllable data flowing into it (push messages, backend errors, printer responses, etc.) results in DOM XSS.\n",
+            "severity": "WARNING",
+            "suggestion": "Set `text_escape: true` in the PNotify options so the value is rendered as plain text. If the value must contain HTML, escape any user-controllable substring via `_.escape(...)` before interpolating it into the markup.\n",
+            "since": null
+          },
+          "file_path": "static/js/touchui.bundled.js",
+          "line_number": 1253,
+          "end_line_number": 1259,
+          "code_snippet": "    1252 | \t\tif(whatsNew !== false && whatsNew.trim() != \"\") {\n  > 1253 | \t\t\tnew PNotify({\n    1254 | \t\t\t\ttitle: 'TouchUI: What\\'s new?',"
+        }
+      ],
+      "deprecation": [],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_themeify",
+      "summary": {
+        "removal": 0,
+        "security": 1,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 7,
+          "end_line_number": 98,
+          "code_snippet": "       6 | \n  >    7 | class ThemeifyPlugin(octoprint.plugin.StartupPlugin,\n       8 |                      octoprint.plugin.AssetPlugin,"
+        }
+      ],
+      "deprecation": [],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_uploadanything",
+      "summary": {
+        "removal": 0,
+        "security": 1,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 8,
+          "end_line_number": 53,
+          "code_snippet": "       7 | \n  >    8 | class UploadAnythingPlugin(octoprint.plugin.TemplatePlugin,\n       9 |                 octoprint.plugin.SettingsPlugin):"
+        }
+      ],
+      "deprecation": [],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_PrintTimeGenius",
+      "summary": {
+        "removal": 2,
+        "security": 2,
+        "deprecation": 1,
+        "packaging": 0
+      },
+      "removal": [
+        {
+          "rule": {
+            "id": "REM-0578",
+            "type": "removal",
+            "message": "`octoprint.printer.standard.Printer.on_comm_file_selected` (commonly accessed by plugins as `self._printer.on_comm_file_selected`) has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.printer.standard.Printer.on_comm_file_selected` (commonly accessed by plugins as `self._printer.on_comm_file_selected`).",
+            "since": "2.0.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 571,
+          "end_line_number": 571,
+          "code_snippet": "     570 |     if pkg_resources.parse_version(octoprint._version.get_versions()['version']) == pkg_resources.parse_version(\"1.3.9rc2\"):\n  >  571 |       self._printer.old_on_comm = self._printer.on_comm_file_selected\n     572 |       def new_on_comm(self, *args, **kwargs):"
+        },
+        {
+          "rule": {
+            "id": "REM-0578",
+            "type": "removal",
+            "message": "`octoprint.printer.standard.Printer.on_comm_file_selected` (commonly accessed by plugins as `self._printer.on_comm_file_selected`) has been removed.",
+            "severity": "CRITICAL",
+            "suggestion": "Remove usage of `octoprint.printer.standard.Printer.on_comm_file_selected` (commonly accessed by plugins as `self._printer.on_comm_file_selected`).",
+            "since": "2.0.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 575,
+          "end_line_number": 575,
+          "code_snippet": "     574 |         self._create_estimator()\n  >  575 |       self._printer.on_comm_file_selected = types.MethodType(new_on_comm, self._printer)\n     576 | "
+        }
+      ],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0004",
+            "type": "security",
+            "message": "Plugin implements `BlueprintPlugin` but does not override `is_blueprint_csrf_protected()`. Until OctoPrint 2.0.0, the default implementation returns `False`, leaving the blueprint's endpoints exposed to CSRF attacks.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_blueprint_csrf_protected()` to return `True` and exempt only the endpoints that must not use CSRF protection via the `@octoprint.plugin.BlueprintPlugin.csrf_exempt()` decorator.\n",
+            "since": "1.8.3"
+          },
+          "file_path": "__init__.py",
+          "line_number": 408,
+          "end_line_number": 705,
+          "code_snippet": "     407 | \n  >  408 | class PrintTimeGeniusPlugin(octoprint.plugin.SettingsPlugin,\n     409 |                             octoprint.plugin.AssetPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 408,
+          "end_line_number": 705,
+          "code_snippet": "     407 | \n  >  408 | class PrintTimeGeniusPlugin(octoprint.plugin.SettingsPlugin,\n     409 |                             octoprint.plugin.AssetPlugin,"
+        }
+      ],
+      "deprecation": [
+        {
+          "rule": {
+            "id": "DEP-0050",
+            "type": "deprecation",
+            "message": "`octoprint.filemanager.FileManager.list_files` (commonly accessed by plugins as `self._file_manager.list_files`) has been deprecated in favor of list_storage_entries.",
+            "severity": "MEDIUM",
+            "suggestion": "Use `octoprint.filemanager.FileManager.list_storage_entries` (commonly accessed by plugins as `self._file_manager.list_storage_entries`) instead.",
+            "since": "2.0.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 560,
+          "end_line_number": 560,
+          "code_snippet": "     559 |     # Unmark all pending analyses.\n  >  560 |     all_files = self._file_manager.list_files()\n     561 |     for dest in all_files.keys():"
+        }
+      ],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_bedlevelvisualizer",
+      "summary": {
+        "removal": 0,
+        "security": 6,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [],
+      "security": [
+        {
+          "rule": {
+            "id": "SEC-0001",
+            "type": "security",
+            "message": "Plugin implements `SimpleApiPlugin` but does not override `is_api_protected()`. Until OctoPrint 2.1.0, the default implementation returns `False`, allowing unauthenticated access to `SimpleApi` endpoints.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_api_protected()` to explicitly return `True`. Note that this only controls authentication; you should also verify permissions explicitly in each API handler (e.g. `Permissions.PLUGIN_MYPLUGIN_ACCESS`).\n",
+            "since": "1.11.2"
+          },
+          "file_path": "__init__.py",
+          "line_number": 14,
+          "end_line_number": 587,
+          "code_snippet": "      13 | \n  >   14 | class bedlevelvisualizer(\n      15 | \toctoprint.plugin.StartupPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0003",
+            "type": "security",
+            "message": "Plugin implements `is_blueprint_protected()` but explicitly returns `False`, leaving the blueprint's dynamic endpoints accessible without authentication.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Ensure this is intentional. Consider returning `True` and adding explicit permission checks in each endpoint handler (e.g. `Permissions.PLUGIN_MYPLUGIN_ACCESS`).\n",
+            "since": "1.2.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 14,
+          "end_line_number": 587,
+          "code_snippet": "      13 | \n  >   14 | class bedlevelvisualizer(\n      15 | \toctoprint.plugin.StartupPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0004",
+            "type": "security",
+            "message": "Plugin implements `BlueprintPlugin` but does not override `is_blueprint_csrf_protected()`. Until OctoPrint 2.0.0, the default implementation returns `False`, leaving the blueprint's endpoints exposed to CSRF attacks.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_blueprint_csrf_protected()` to return `True` and exempt only the endpoints that must not use CSRF protection via the `@octoprint.plugin.BlueprintPlugin.csrf_exempt()` decorator.\n",
+            "since": "1.8.3"
+          },
+          "file_path": "__init__.py",
+          "line_number": 14,
+          "end_line_number": 587,
+          "code_snippet": "      13 | \n  >   14 | class bedlevelvisualizer(\n      15 | \toctoprint.plugin.StartupPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0007",
+            "type": "security",
+            "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n",
+            "severity": "CRITICAL",
+            "suggestion": "Override `is_template_autoescaped()` to return `True` and use the `safe` Jinja filter only for variables that legitimately need to render HTML. See https://faq.octoprint.org/plugin-autoescape.\n",
+            "since": "1.11.0"
+          },
+          "file_path": "__init__.py",
+          "line_number": 14,
+          "end_line_number": 587,
+          "code_snippet": "      13 | \n  >   14 | class bedlevelvisualizer(\n      15 | \toctoprint.plugin.StartupPlugin,"
+        },
+        {
+          "rule": {
+            "id": "SEC-0011",
+            "type": "security",
+            "message": "`PNotify` invocation passing a non-literal value as `text` without `text_escape: true`. PNotify v2 (the version shipped with OctoPrint) renders `text` as raw HTML by default, so any attacker-controllable data flowing into it (push messages, backend errors, printer responses, etc.) results in DOM XSS.\n",
+            "severity": "WARNING",
+            "suggestion": "Set `text_escape: true` in the PNotify options so the value is rendered as plain text. If the value must contain HTML, escape any user-controllable substring via `_.escape(...)` before interpolating it into the markup.\n",
+            "since": null
+          },
+          "file_path": "static/js/bedlevelvisualizer.js",
+          "line_number": 188,
+          "end_line_number": 192,
+          "code_snippet": "     187 | \t\t\t\tself.processing(false);\n  >  188 | \t\t\t\tnew PNotify({\n     189 | \t\t\t\t\ttitle: 'Bed Visualizer Error',"
+        },
+        {
+          "rule": {
+            "id": "SEC-0011",
+            "type": "security",
+            "message": "`PNotify` invocation passing a non-literal value as `text` without `text_escape: true`. PNotify v2 (the version shipped with OctoPrint) renders `text` as raw HTML by default, so any attacker-controllable data flowing into it (push messages, backend errors, printer responses, etc.) results in DOM XSS.\n",
+            "severity": "WARNING",
+            "suggestion": "Set `text_escape: true` in the PNotify options so the value is rendered as plain text. If the value must contain HTML, escape any user-controllable substring via `_.escape(...)` before interpolating it into the markup.\n",
+            "since": null
+          },
+          "file_path": "static/js/bedlevelvisualizer.js",
+          "line_number": 385,
+          "end_line_number": 390,
+          "code_snippet": "     384 | \t\t\t} catch(err) {\n  >  385 | \t\t\t\tnew PNotify({\n     386 | \t\t\t\t\t\ttitle: 'Bed Visualizer Error',"
+        }
+      ],
+      "deprecation": [],
+      "packaging": []
+    },
+    {
+      "plugin_path": "/home/matt/Desktop/3DPrinter/extract/octoprint_active_filters_extended",
+      "summary": {
+        "removal": 0,
+        "security": 0,
+        "deprecation": 0,
+        "packaging": 0
+      },
+      "removal": [],
+      "security": [],
+      "deprecation": [],
+      "packaging": []
+    }
+  ],
+  "rule_statistics": [
+    {
+      "rule_id": "SEC-0007",
+      "total_matches": 8,
+      "plugins_matched": 8,
+      "message": "Plugin implements `TemplatePlugin` but does not override `is_template_autoescaped()`. Until OctoPrint 2.1.0, the default implementation returns `False`, exposing the templates to XSS via unescaped variables.\n"
+    },
+    {
+      "rule_id": "REM-0441",
+      "total_matches": 7,
+      "plugins_matched": 3,
+      "message": "`octoprint.server.admin_permission` was deprecated since 1.4.0 and has been removed."
+    },
+    {
+      "rule_id": "SEC-0004",
+      "total_matches": 4,
+      "plugins_matched": 4,
+      "message": "Plugin implements `BlueprintPlugin` but does not override `is_blueprint_csrf_protected()`. Until OctoPrint 2.0.0, the default implementation returns `False`, leaving the blueprint's endpoints exposed to CSRF attacks.\n"
+    },
+    {
+      "rule_id": "SEC-0011",
+      "total_matches": 4,
+      "plugins_matched": 2,
+      "message": "`PNotify` invocation passing a non-literal value as `text` without `text_escape: true`. PNotify v2 (the version shipped with OctoPrint) renders `text` as raw HTML by default, so any attacker-controllable data flowing into it (push messages, backend errors, printer responses, etc.) results in DOM XSS.\n"
+    },
+    {
+      "rule_id": "SEC-0001",
+      "total_matches": 3,
+      "plugins_matched": 3,
+      "message": "Plugin implements `SimpleApiPlugin` but does not override `is_api_protected()`. Until OctoPrint 2.1.0, the default implementation returns `False`, allowing unauthenticated access to `SimpleApi` endpoints.\n"
+    },
+    {
+      "rule_id": "SEC-0009",
+      "total_matches": 2,
+      "plugins_matched": 1,
+      "message": "Knockout `html:` binding bound to a non-literal value in a Jinja/HTML template. The bound expression is rendered as raw HTML, so any attacker-controllable data flowing into it results in DOM XSS.\n"
+    },
+    {
+      "rule_id": "SEC-0003",
+      "total_matches": 2,
+      "plugins_matched": 2,
+      "message": "Plugin implements `is_blueprint_protected()` but explicitly returns `False`, leaving the blueprint's dynamic endpoints accessible without authentication.\n"
+    },
+    {
+      "rule_id": "REM-0578",
+      "total_matches": 2,
+      "plugins_matched": 1,
+      "message": "`octoprint.printer.standard.Printer.on_comm_file_selected` (commonly accessed by plugins as `self._printer.on_comm_file_selected`) has been removed."
+    },
+    {
+      "rule_id": "DEP-0050",
+      "total_matches": 1,
+      "plugins_matched": 1,
+      "message": "`octoprint.filemanager.FileManager.list_files` (commonly accessed by plugins as `self._file_manager.list_files`) has been deprecated in favor of list_storage_entries."
+    }
+  ]
+}

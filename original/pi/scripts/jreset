@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sleep 1
+gpio -g write 24 1
+gpio -g write 24 0
+sleep 5

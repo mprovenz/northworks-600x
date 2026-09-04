@@ -1,0 +1,17 @@
+#!/bin/bash
+
+FILE=~/.octoprint/uploads/firmware.bin
+FILE2=~/.octoprint/uploads/OctoPrint-GridNorm-master.zip
+
+if test -f "$FILE"; then
+	echo 1
+    exit 0
+else
+	if test -f "$FILE2"; then
+		echo 1
+		exit 0
+	else
+		echo 0
+    	exit 1
+	fi
+fi

@@ -1,0 +1,78 @@
+{
+    "type": "filament",
+    "name": "Generic PLA @Northworks600x",
+    "from": "User",
+    "instantiation": "true",
+    "inherits": "Generic PLA @System",
+    "filament_settings_id": [
+        "Generic PLA @Northworks600x"
+    ],
+    "version": "2.4.2",
+    "compatible_printers": [
+        "MyMarlin 0.4 nozzle",
+        "Northworks 600x 0.4 nozzle",
+        "Northworks 600x 0.6 nozzle",
+        "Northworks 600x 0.8 nozzle"
+    ],
+    "filament_diameter": [
+        "1.75"
+    ],
+    "nozzle_temperature": [
+        "215"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "225"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "60"
+    ],
+    "fan_min_speed": [
+        "0"
+    ],
+    "fan_max_speed": [
+        "0"
+    ],
+    "fan_cooling_layer_time": [
+        "45"
+    ],
+    "close_fan_the_first_x_layers": [
+        "1"
+    ],
+    "slow_down_layer_time": [
+        "10"
+    ],
+    "slow_down_min_speed": [
+        "20"
+    ],
+    "compatible_printers_condition": "",
+    "cool_plate_temp": [
+        "60"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "60"
+    ],
+    "eng_plate_temp": [
+        "60"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "60"
+    ],
+    "textured_plate_temp": [
+        "60"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "60"
+    ],
+    "supertack_plate_temp": [
+        "60"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "60"
+    ],
+    "hot_plate_temp": [
+        "60"
+    ],
+    "filament_max_volumetric_speed": [
+        "12"
+    ]
+}

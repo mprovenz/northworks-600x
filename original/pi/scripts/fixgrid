@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DESTPATH=$(mountctl)
+FILE=${DESTPATH}/cartesian.grid
+
+if [ ! -z "$DESTPATH" ]; then
+	echo running hgrid >> /tmp/err.log
+	hgrid $FILE
+	sudo cp /tmp/cartesian.grid  $DESTPATH
+	sleep 1
+	umountctl
+	machine restart
+	echo 1
+	exit
+else
+	echo mountctl failed >> /tmp/err.log
+	echo 0
+	exit 1
+fi

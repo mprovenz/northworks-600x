@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ $1 == 'ssid' ];
+then
+iwgetid | cut -d\" -f2
+elif [ $1 == 'address' ];
+then
+ifconfig | grep wlan0 -A 10 | grep 'inet ' | awk '{print $2}'
+elif [ $1 == 'address2' ];
+then
+ifconfig | grep eth0 -A 7 | grep 'inet ' | awk '{print $2}'
+elif [ $1 == 'address3' ];
+then
+echo 1.2.3.4
+elif [ $1 == 'wifis' ];
+then
+iwlist wlan0 scan|grep -E 'SSID|Quality|Encryption|Address'
+fi

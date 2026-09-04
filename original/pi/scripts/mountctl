@@ -1,0 +1,57 @@
+#!/bin/bash
+
+MOUNTPATH=$(lsblk | grep sda1 | awk '{print $7}')
+FILE=${MOUNTPATH}/FIRMWARE.CUR
+BLKDEVICE=/dev/sda1
+
+# Log a string via the syslog facility.
+log()
+{
+    logger -p user.$1 -t "mountctl[$$]" -- "$2"
+}
+
+
+if [ ! -z "$MOUNTPATH" ]; then
+        echo $MOUNTPATH
+        exit 0
+fi
+
+touch /tmp/smoothie_mounted
+
+sudo udevadm trigger --action=add $BLKDEVICE
+
+
+i="0"
+
+while [ $i -lt 30 ]
+do
+	sleep 1
+	MOUNTPATH=$(lsblk | grep sda1 | awk '{print $7}')
+	if [ ! -z "$MOUNTPATH" ]; then
+		break
+	fi
+	i=$[$i+1]
+done
+
+if [ -z "$MOUNTPATH" ]; then
+	sudo udevadm trigger --action=add $BLKDEVICE
+fi
+
+i="0"
+
+while [ $i -lt 30 ]
+do
+	sleep 1
+	MOUNTPATH=$(lsblk | grep sda1 | awk '{print $7}')
+	if [ ! -z "$MOUNTPATH" ]; then
+		break
+	fi
+	i=$[$i+1]
+done
+
+if [ -z "$MOUNTPATH" ]; then
+	exit 1
+else
+	echo $MOUNTPATH
+	exit 0
+fi

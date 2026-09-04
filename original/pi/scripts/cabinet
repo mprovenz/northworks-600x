@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ $1 = "on" ]; then
+gpio -g write 27 0
+else
+gpio -g write 27 1
+fi

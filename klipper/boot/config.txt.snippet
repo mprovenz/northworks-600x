@@ -1,0 +1,10 @@
+# Append at the VERY END of /boot/firmware/config.txt — the [all] header is load-bearing:
+# lines under a stale [pi4]/[cm4] filter are silently ignored (symptom: dead controller,
+# `pinctrl get 4` shows ip). Verify after boot: pinctrl get 4 17 24 27
+[all]
+# Northworks 600x relay defaults (all active-low)
+gpio=4=op,dl                              # machine/controller power: ON at boot
+gpio=17=op,dl                             # cabinet lights: ON at boot
+gpio=27=op,dh                             # cabinet heater: OFF at boot (vendor had ON)
+gpio=24=op,dl                             # controller reset line: idle
+dtoverlay=gpio-shutdown,gpio_pin=3,debounce=200   # physical shutdown button

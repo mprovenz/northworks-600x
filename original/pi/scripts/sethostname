@@ -1,0 +1,9 @@
+#!/bin/bash
+
+OLDHOSTNAME=$(hostname)
+NEWHOSTNAME=${1//[^[:alnum:]_-]/}
+
+hostname $NEWHOSTNAME
+echo $NEWHOSTNAME | tee /boot/octopi-hostname.txt &>> /tmp/err.out
+sed -i "s/$OLDHOSTNAME/$NEWHOSTNAME/" /etc/hosts
+sed -i "s/$OLDHOSTNAME/$NEWHOSTNAME/" /etc/hostname

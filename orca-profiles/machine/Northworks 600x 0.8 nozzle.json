@@ -1,0 +1,137 @@
+{
+    "type": "machine",
+    "name": "Northworks 600x 0.8 nozzle",
+    "from": "User",
+    "is_custom_defined": "0",
+    "instantiation": "true",
+    "inherits": "MyMarlin 0.4 nozzle",
+    "printer_settings_id": "Northworks 600x 0.8 nozzle",
+    "printer_variant": "0.8",
+    "version": "2.4.2",
+    "printable_area": [
+        "0x0",
+        "600x0",
+        "600x600",
+        "0x600"
+    ],
+    "printable_height": "900",
+    "gcode_flavor": "marlin",
+    "single_extruder_multi_material": "0",
+    "use_relative_e_distances": "1",
+    "emit_machine_limits_to_gcode": "0",
+    "nozzle_diameter": [
+        "0.8",
+        "0.8"
+    ],
+    "extruder_offset": [
+        "0x0",
+        "0x0"
+    ],
+    "extruder_colour": [
+        "#FCE94F",
+        "#4F9EFC"
+    ],
+    "max_layer_height": [
+        "0.60",
+        "0.60"
+    ],
+    "min_layer_height": [
+        "0.15",
+        "0.15"
+    ],
+    "machine_max_speed_x": [
+        "200"
+    ],
+    "machine_max_speed_y": [
+        "200"
+    ],
+    "machine_max_speed_z": [
+        "3.33"
+    ],
+    "machine_max_speed_e": [
+        "50"
+    ],
+    "machine_max_acceleration_x": [
+        "3200"
+    ],
+    "machine_max_acceleration_y": [
+        "3200"
+    ],
+    "machine_max_acceleration_z": [
+        "50"
+    ],
+    "machine_max_acceleration_e": [
+        "500"
+    ],
+    "machine_max_acceleration_extruding": [
+        "3200"
+    ],
+    "machine_max_acceleration_retracting": [
+        "500"
+    ],
+    "machine_max_acceleration_travel": [
+        "3200"
+    ],
+    "machine_max_jerk_x": [
+        "0"
+    ],
+    "machine_max_jerk_y": [
+        "0"
+    ],
+    "machine_max_jerk_z": [
+        "0"
+    ],
+    "machine_max_jerk_e": [
+        "0"
+    ],
+    "retraction_length": [
+        "3",
+        "3"
+    ],
+    "retraction_speed": [
+        "30",
+        "30"
+    ],
+    "deretraction_speed": [
+        "8",
+        "8"
+    ],
+    "retraction_minimum_travel": [
+        "3",
+        "3"
+    ],
+    "retract_before_wipe": [
+        "0%",
+        "0%"
+    ],
+    "retract_when_changing_layer": [
+        "1",
+        "1"
+    ],
+    "retract_restart_extra": [
+        "0",
+        "0"
+    ],
+    "retract_length_toolchange": [
+        "5",
+        "5"
+    ],
+    "retract_restart_extra_toolchange": [
+        "0",
+        "0"
+    ],
+    "wipe": [
+        "0",
+        "0"
+    ],
+    "z_hop": [
+        "0",
+        "0"
+    ],
+    "machine_start_gcode": ";=== Northworks 600x — Klipper start (2026-08-14) ===\n; Heat/home/mesh/head-lock/tool-offsets all live in Klipper's PRINT_START\n; macro (macros-print.cfg). The slicer only passes targets.\nPRINT_START EXTRUDER={first_layer_temperature[initial_tool]} BED={first_layer_bed_temperature[initial_tool]} TOOL={initial_tool}\n; Preheat the second head (non-blocking) if this is a dual-material job.\n; NB dual prints stay blocked until the T1 Z tip delta is measured (_TH t1_z).\n{if is_extruder_used[0] and initial_tool != 0}M104 S{first_layer_temperature[0]} T0\n{endif}{if is_extruder_used[1] and initial_tool != 1}M104 S{first_layer_temperature[1]} T1\n{endif};=== end start ===",
+    "change_filament_gcode": ";=== tool change -> T{next_extruder} ===\n; the Klipper T0/T1 macros do the z-hop, lift/lock choreography and offsets;\n; re-assert layer Z afterwards — the macro's +2 hop is NOT auto-restored\n; (mid-print changes would otherwise print in the air until the next layer)\nT{next_extruder}\nG1 Z{layer_z} F198",
+    "machine_end_gcode": ";=== Northworks 600x — Klipper end ===\nPRINT_END",
+    "layer_change_gcode": ";AFTER_LAYER_CHANGE\n;[layer_z]\nG92 E0\nTIMELAPSE_TAKE_FRAME",
+    "before_layer_change_gcode": ";BEFORE_LAYER_CHANGE\n;[layer_z]\nG92 E0",
+    "machine_pause_gcode": "M601"
+}

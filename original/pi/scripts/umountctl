@@ -1,0 +1,53 @@
+#!/bin/bash
+MOUNTPATH=$(lsblk | grep sda1 | awk '{print $7}')
+FILE=${MOUNTPATH}/FIRMWARE.CUR
+BLKDEVICE=/dev/sda1
+
+# Log a string via the syslog facility.
+log()
+{
+    logger -p user.$1 -t "umountctl[$$]" -- "$2"
+}
+
+if [ -z "$MOUNTPATH" ]; then
+		echo 1
+        exit 0
+fi
+
+sudo umount $BLKDEVICE
+
+rm -f /tmp/smoothie_mounted
+
+i="0"
+
+while [ $i -lt 30 ]
+do
+	sleep 1
+	if ! test -f "$FILE"; then
+		break
+	fi
+	i=$[$i+1]
+done
+
+if test -f "$FILE"; then
+	sudo umount $BLKDEVICE
+fi
+
+i="0"
+
+while [ $i -lt 30 ]
+do
+	sleep 1
+	if ! test -f "$FILE"; then
+		break
+	fi
+	i=$[$i+1]
+done
+
+if test -f "$FILE"; then
+	echo 0
+	exit 1
+else
+	echo 1
+	exit 0
+fi
