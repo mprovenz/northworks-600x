@@ -2,6 +2,10 @@
 
 ![Northworks 600x](photos/full_printer.jpg)
 
+<img src="file:///home/matt/Desktop/3DPrinter/repo/photos/timelapse_cookiecutter_barrel.gif" title="" alt="Cookie cutter barrel, 1d 6h print, T0 only" data-align="center">
+
+
+
 We recently acquired a Northworks Automation 600x 3D printer. Northworks Automation appears to be a company out of Houston Texas that no longer exists. I did not do much research to confirm what happened or if they are operating under a different name now, but there is not much easily accessible information on them or their printers. 
 
 To fully understand what we had and ensure we had full control over the printer, we worked through the design and configuration and ended up moving everything over to Klipper. Zero hardware changes were needed. We are printing reliably at over 3× the original acceleration (1000 → 3200 mm/s²) and ~1.5× the originaly travel speed (133 → 200 mm/s).
@@ -20,18 +24,18 @@ This document will be structured as:
 
 ## Repository layout
 
-| Path                                                   | Contents                                                                                                                                                                         |
-| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `klipper/`                                             | The Klipper configuration the printer runs today, as a deployable set.                                                                                                           |
-| `klipper/config/`                                      | `printer.cfg` (template, set your `[mcu] serial`), the hardware and macro include files, `moonraker.conf`, `crowsnest.conf`, and an example `saved_variables.cfg`.               |
-| `klipper/boot/`                                        | The `config.txt` GPIO block the Raspberry Pi needs so the controller powers up at boot.                                                                                          |
-| `klipper/PREFLIGHT.md` · `klipper/reference/pinmap.md` | What to measure before flashing anything; the Smoothieware → Klipper pin translation and the driver enable/chip-select analysis.                                                 |
-| `orca-profiles/`                                       | OrcaSlicer machine (0.4 / 0.6 / 0.8 nozzle), process and filament profiles for the Klipper setup, plus an `install.sh` file for easy Linux deployment.                           |
-| `original/`                                            | The original system exactly as recovered, for comparison against another unit. Nothing in it has been modified.                                                                  |
-| `original/controller-sd/`                              | The controller's original microSD contents: Smoothieware `config`, `config-override` (what `M503` reports), `on_boot`, the stored bed mesh, and the vendor's 2020 backup config. |
-| `original/firmware/`                                   | `FIRMWARE.CUR`, the original Smoothieware fork, the only copy that exists plus the `strings` extraction it was reverse-engineered from.                                          |
-| `original/pi/`                                         | The original `/usr/local/bin` control scripts and the OctoPrint plugin inventory. .                                                                                              |
-| `photos/`                                              | Reference photos of the machine.                                                                                                                                                 |
+| Path                                                   | Contents                                                                                                                                                                             |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `klipper/`                                             | The Klipper configuration the printer runs today, as a deployable set.                                                                                                               |
+| `klipper/config/`                                      | `printer.cfg` (template, set your `[mcu] serial`), the hardware and macro include files, `moonraker.conf`, `crowsnest.conf`, and an example `saved_variables.cfg`.                   |
+| `klipper/boot/`                                        | The `config.txt` GPIO block the Raspberry Pi needs so the controller powers up at boot.                                                                                              |
+| `klipper/PREFLIGHT.md` · `klipper/reference/pinmap.md` | What to measure before flashing anything; the Smoothieware → Klipper pin translation and the driver enable/chip-select analysis.                                                     |
+| `orca-profiles/`                                       | OrcaSlicer machine (0.4 / 0.6 / 0.8 nozzle), process and filament profiles for the Klipper setup, plus an `install.sh` file for easy Linux deployment.                               |
+| `original/`                                            | The original system exactly as recovered, for comparison against another unit. Nothing in it has been modified and it is provided as-found not bound by any license in this project. |
+| `original/controller-sd/`                              | The controller's original microSD contents: Smoothieware `config`, `config-override` (what `M503` reports), `on_boot`, the stored bed mesh, and the vendor's 2020 backup config.     |
+| `original/firmware/`                                   | `FIRMWARE.CUR`, the original Smoothieware fork, the only copy that exists plus the `strings` extraction it was reverse-engineered from.                                              |
+| `original/pi/`                                         | The original `/usr/local/bin` control scripts and the OctoPrint plugin inventory. .                                                                                                  |
+| `photos/`                                              | Reference photos of the machine.                                                                                                                                                     |
 
 ## Physical Properties
 
@@ -427,8 +431,6 @@ Everything below is what was set specifically for this printer. Values not liste
 
 - Under `[all]`: `gpio=4=op,dl`, `gpio=17=op,dl`, `gpio=27=op,dh`, `gpio=24=op,dl`, `dtoverlay=gpio-shutdown,gpio_pin=3,debounce=200`.
 
-
-
 ## Current calibrated reference values from our running machine
 
 | Item                           | Value                                         | Note                                                                                           |
@@ -446,35 +448,29 @@ Everything below is what was set specifically for this printer. Values not liste
 
 Status of everything that exists in the configuration. "Proven" means used across real prints; "Tested" means it worked in one session or a handful of runs; "Untested" means it is in the config and parses but has not been exercised.
 
-| Feature | Status | Notes |
-|---|---|---|
-| Motion, homing, TMC2660 drivers | Proven | Weeks of prints; speed ladder clean to 250 mm/s @ 4000 mm/s² |
-| Heaters, PID, heatsink fans | Proven | |
-| Probe-referenced Z homing, 12×12 bed mesh | Proven | |
-| Servo heads: glide motion, energised hold, `T0`/`T1` tool change | Proven | Dual-material prints have run |
-| `PROBE_CALIBRATE` wrapper (paper test with T0 locked) | Proven | |
-| `G28` wrapper (release heads after Z home) | Proven | |
-| Filament runout, both channels | Proven | T0 caught a real runout and paused the print |
-| Lights, cabinet enable, Pi temperature | Proven | |
-| `PAUSE`, `RESUME`, `CANCEL_PRINT`, `PARK` | Proven | |
-| `RESUME` re-heat of bed and hotend | Tested | Exercised by one real runout |
-| `RESUME` head-posture restore | Untested | Added after a resume ran with the active head lifted |
-| Pause-aware idle timeout | Untested | Keeps bed and homing during a pause longer than 30 min |
-| `PRINT_START` homed guard | Untested | Skips the pre-home Z hop when axes are unhomed |
-| `SET_RIGHT_Z`, `saved_variables` persistence of `t1_z` | Proven | Survives restarts |
-| `NUDGE_RIGHT_Z`, `SHOW_TOOL_Z` | Untested | |
-| `MEASURE_LOCKED_DELTA` | Tested | Repeatable to ±0.02 mm; result (−0.34) not yet validated by a T1 print |
-| `MEASURE_TIP_DELTA` | Tested | Measures in probe posture; superseded by `MEASURE_LOCKED_DELTA` |
-| `PROBE_LOCKED`, `PROBE_ACCURACY_LOCKED`, `_PROBE_CFG` | Diagnostic only | Locked-posture probing measured 3–7× less repeatable than probe posture |
-| Z-drift sentinel (`Z_REF_CALIBRATE`, `Z_DRIFT_CHECK` on P1.26) | Untested | Never calibrated |
-| `[screws_tilt_adjust]` | Untested | `screw_thread` unverified |
-| Chamber heater block, `M141`/`M191` | Untested | Hardware not wired; block commented out |
-| `TEST_SPEED` | Proven | Set the current velocity and acceleration limits |
-| OrcaSlicer profiles | Proven | Single-material prints |
-| Timelapse, camera, HelixScreen | Proven | |
-
-## Timelapse
-
-![Cookie cutter barrel, 1d 6h print, T0 only](photos/timelapse_cookiecutter_barrel.gif)
-
-Full-resolution video: [photos/timelapse_cookiecutter_barrel.mp4](photos/timelapse_cookiecutter_barrel.mp4) (640×480, 18 s, captured by moonraker-timelapse one frame per layer).
+| Feature                                                          | Status          | Notes                                                                   |
+| ---------------------------------------------------------------- | --------------- | ----------------------------------------------------------------------- |
+| Motion, homing, TMC2660 drivers                                  | Proven          | Weeks of prints; speed ladder clean to 250 mm/s @ 4000 mm/s²            |
+| Heaters, PID, heatsink fans                                      | Proven          |                                                                         |
+| Probe-referenced Z homing, 12×12 bed mesh                        | Proven          |                                                                         |
+| Servo heads: glide motion, energised hold, `T0`/`T1` tool change | Proven          | Dual-material prints have run                                           |
+| `PROBE_CALIBRATE` wrapper (paper test with T0 locked)            | Proven          |                                                                         |
+| `G28` wrapper (release heads after Z home)                       | Proven          |                                                                         |
+| Filament runout, both channels                                   | Proven          | T0 caught a real runout and paused the print                            |
+| Lights, cabinet enable, Pi temperature                           | Proven          |                                                                         |
+| `PAUSE`, `RESUME`, `CANCEL_PRINT`, `PARK`                        | Proven          |                                                                         |
+| `RESUME` re-heat of bed and hotend                               | Tested          | Exercised by one real runout                                            |
+| `RESUME` head-posture restore                                    | Untested        | Added after a resume ran with the active head lifted                    |
+| Pause-aware idle timeout                                         | Untested        | Keeps bed and homing during a pause longer than 30 min                  |
+| `PRINT_START` homed guard                                        | Untested        | Skips the pre-home Z hop when axes are unhomed                          |
+| `SET_RIGHT_Z`, `saved_variables` persistence of `t1_z`           | Proven          | Survives restarts                                                       |
+| `NUDGE_RIGHT_Z`, `SHOW_TOOL_Z`                                   | Untested        |                                                                         |
+| `MEASURE_LOCKED_DELTA`                                           | Tested          | Repeatable to ±0.02 mm; result (−0.34) not yet validated by a T1 print  |
+| `MEASURE_TIP_DELTA`                                              | Tested          | Measures in probe posture; superseded by `MEASURE_LOCKED_DELTA`         |
+| `PROBE_LOCKED`, `PROBE_ACCURACY_LOCKED`, `_PROBE_CFG`            | Diagnostic only | Locked-posture probing measured 3–7× less repeatable than probe posture |
+| Z-drift sentinel (`Z_REF_CALIBRATE`, `Z_DRIFT_CHECK` on P1.26)   | Untested        | Never calibrated                                                        |
+| `[screws_tilt_adjust]`                                           | Untested        | `screw_thread` unverified                                               |
+| Chamber heater block, `M141`/`M191`                              | Untested        | Hardware not wired; block commented out                                 |
+| `TEST_SPEED`                                                     | Proven          | Set the current velocity and acceleration limits                        |
+| OrcaSlicer profiles                                              | Proven          | Single-material prints                                                  |
+| Timelapse, camera, HelixScreen                                   | Proven          |                                                                         |
