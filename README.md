@@ -2,7 +2,7 @@
 
 ![Northworks 600x](photos/full_printer.jpg)
 
-<img src="file:///home/matt/Desktop/3DPrinter/repo/photos/timelapse_cookiecutter_barrel.gif" title="" alt="Cookie cutter barrel, 1d 6h print, T0 only" data-align="center">
+<img src="photos/timelapse_cookiecutter_barrel.gif" title="" alt="Cookie cutter barrel, 1d 6h print, T0 only" data-align="center">
 
 
 
@@ -12,15 +12,45 @@ To fully understand what we had and ensure we had full control over the printer,
 
 This is a very niche product but there may be more floating around out there. The printer is very well built, and we wanted to save anyone time in the future who may acquire one and want to do the same. This repo will be a repository for all of the knowledge and configuration we have learned on the printer, as well as any assets to assist in migrating to Klipper. 
 
-This document will be structured as: 
+## Contents
 
-1. Information on the printer design 
-   
-   1. Physical properties
-   
-   2. Software stack (original and now)
-   
-   3. Controller pin maps
+- [Repository layout](#repository-layout)
+- [Physical Properties](#physical-properties)
+- [General Design](#general-design)
+  - [Controller Design](#controller-design)
+- [Software Stack](#software-stack)
+- [Controller Pin Map](#controller-pin-map)
+  - [Raspberry Pi GPIO (BCM)](#raspberry-pi-gpio-bcm)
+- [Derived Constants](#derived-constants)
+- [Printhead and Nozzle Design](#printhead-and-nozzle-design)
+  - [The lift mechanism](#the-lift-mechanism)
+  - [The nozzle-contact sensor](#the-nozzle-contact-sensor)
+  - [Hotend and extruder](#hotend-and-extruder)
+  - [Geometry and offsets](#geometry-and-offsets)
+  - [How the original firmware used the mechanism](#how-the-original-firmware-used-the-mechanism)
+  - [How Klipper uses it](#how-klipper-uses-it)
+- [Issues found on our printer](#issues-found-on-our-printer)
+- [Klipper Migration](#klipper-migration)
+  - [Pi Setup](#pi-setup)
+  - [Controller firmware](#controller-firmware)
+  - [Configuration files](#configuration-files)
+    - [printer.cfg](#printercfg)
+    - [hardware-steppers.cfg](#hardware-stepperscfg)
+    - [hardware-extruders.cfg](#hardware-extruderscfg)
+    - [hardware-heaters.cfg](#hardware-heaterscfg)
+    - [hardware-probe.cfg](#hardware-probecfg)
+    - [hardware-host.cfg](#hardware-hostcfg)
+    - [macros-toolhead.cfg](#macros-toolheadcfg)
+    - [macros-client.cfg](#macros-clientcfg)
+    - [macros-print.cfg](#macros-printcfg)
+    - [macros-operator.cfg](#macros-operatorcfg)
+    - [macros-tuning.cfg](#macros-tuningcfg)
+    - [moonraker.conf](#moonrakerconf)
+    - [crowsnest.conf](#crowsnestconf)
+    - [saved_variables.cfg](#saved_variablescfg)
+    - [/boot/firmware/config.txt](#bootfirmwareconfigtxt)
+- [Current calibrated reference values from our running machine](#current-calibrated-reference-values-from-our-running-machine)
+- [Feature status](#feature-status)
 
 ## Repository layout
 
